@@ -5,6 +5,7 @@
   <url>http://maven.apache.org</url>
   <modelVersion>4.0.0</modelVersion>
   <name>JBehave-Demo</name>
+  <description>Minimal setup for a JBehave acceptance test project</description>
  
   <groupId>de.codecentric</groupId>
   <artifactId>jbehave-demo</artifactId>
@@ -18,45 +19,60 @@
       <version>3.9</version>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8</version>
-    </dependency>
-    <dependency>
-	    <groupId>de.codecentric</groupId>
-	    <artifactId>jbehave-junit-runner</artifactId>
-	    <version>1.1.2</version>
+	  <groupId>de.codecentric</groupId>
+	  <artifactId>jbehave-junit-runner</artifactId>
+	  <version>1.1.2</version>
 	</dependency>
+    <dependency>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <version>4.8</version>
+    </dependency>
   </dependencies>
  
   <build>
     <plugins>
- 
-      <plugin>
-        <groupId>org.jbehave</groupId>
-        <artifactId>jbehave-maven-plugin</artifactId>
-        <version>3.1.2</version>
-        <executions>
-          <execution>
-            <id>run-stories-as-embeddables</id>
-            <phase>integration-test</phase>
-            <configuration>
-              <includes>
-                <include>**/*Scenarios.java</include>
-              </includes>
-              <ignoreFailureInStories>true</ignoreFailureInStories>
-              <ignoreFailureInView>false</ignoreFailureInView>
-           </configuration>
-           <goals>
-              <goal>run-stories-as-embeddables</goal>
-           </goals>
-         </execution>
-       </executions>
-     </plugin>
- 
+ 		<plugin>
+	        <groupId>org.jbehave</groupId>
+	        <artifactId>jbehave-maven-plugin</artifactId>
+			<version>3.9.2</version>
+			<dependencies>
+				<dependency>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+					<version>1.2.17</version>
+				</dependency>
+				<dependency>
+        			<groupId>org.apache.xmlgraphics</groupId>
+        			<artifactId>batik-ext</artifactId>
+        			<version>1.7</version>
+      			</dependency>
+			</dependencies>
+
+            <!-- Run tests and generate test results -->
+	        <executions>
+	           <execution>
+	            <id>run-stories-as-embeddables</id>
+	            <phase>test</phase>
+	            <configuration>
+				  <scope>test</scope>
+	              <includes>
+	                <include>**/JBehaveTest.java</include>
+	              </includes>
+	              <!-- 10 min timeout for complete acceptance test suite run -->
+	              <storyTimeoutInSecs>600</storyTimeoutInSecs>
+	           </configuration>
+	           <goals>
+	              <goal>run-stories-as-embeddables</goal>
+	           </goals>
+	         </execution>
+	       </executions>
+	  </plugin>
      <plugin> 
        <groupId>org.apache.maven.plugins</groupId> 
        <artifactId>maven-dependency-plugin</artifactId> 
+
+       <!-- Generate HTML reports -->
        <executions> 
          <execution> 
             <id>unpack-jbehave-site-resources</id>
@@ -73,11 +89,13 @@
                      <artifactId>jbehave-site-resources</artifactId> 
                      <version>3.1.1</version> 
                      <type>zip</type>
-                     <outputDirectory> ${project.build.directory}/jbehave/view</outputDirectory> 
+                     <outputDirectory>${project.build.directory}/jbehave/view</outputDirectory> 
                    </artifactItem> 
                 </artifactItems> 
             </configuration> 
          </execution> 
+         
+         <!-- Extracts default layout for reports -->
          <execution> 
             <id>unpack-jbehave-reports-resources</id>
             <phase>generate-resources</phase> 
@@ -101,6 +119,5 @@
          </executions> 
        </plugin> 			
      </plugins>
- 
   </build>
 </project>
